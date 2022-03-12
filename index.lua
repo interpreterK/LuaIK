@@ -2,16 +2,12 @@ local LuaIK = {}
 LuaIK.__index = LuaIK
 
 local Lua = getfenv()
-local LuaU = {game = game, workspace = workspace, newproxy = newproxy, gcinfo = gcinfo, task = task, spawn = spawn, script = script, require = require, tick = tick, os = os}
-local LuaGlobals = {assert = assert, error = error, print = print, warn = warn, math = math, string = string, getfenv = getfenv, setfenv = setfenv, getmetatable = getmetatable, setmetatable = setmetatable, table = table, ipairs = ipairs, pairs = pairs, next = next, pcall = pcall, rawequal = rawequal, rawset = rawset, rawget = rawget, select = select, tonumber = tonumber, tostring = tostring, type = type, unpack = unpack, xpcall = xpcall, _G = _G, shared = shared, _VERSION = _VERSION, coroutine = coroutine}
-
 local function Interpreter()
 	local LuaIK_Env = {
 		vars = {},
 		funcs = {},
 		ints = {}
 	}
-
 	-- new libraries --
 	local function newvar(Name)
 		if type(Name) == 'string' then
@@ -52,23 +48,9 @@ local function Interpreter()
 		end
 	end
 	----
-	
 	-- libraries --
 	local function include(lib)
-		if lib == "lua.pkg" then
-			for k,v in next, LuaGlobals do
-				getfenv(2)[k] = v
-			end
-		elseif lib == "luau.pkg" then
-			for k,v in next, LuaU do
-				getfenv(2)[k] = v
-			end
-		else
-			if Lua[lib] then
-				return Lua[lib]
-			end
-		end
-		return nil
+		return Lua[lib]
 	end
 	local function var(Name)
 		if not LuaIK_Env.vars[Name] then
@@ -92,7 +74,6 @@ local function Interpreter()
 		return LuaIK_Env.ints[Name]
 	end
 	--
-	
 	return {
 		include = include,
 		newvar = newvar,
